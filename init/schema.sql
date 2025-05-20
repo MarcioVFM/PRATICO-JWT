@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXIST 'usuario'(
+    id INTEGER PRIMARY KEY AUTOINCREMENT
+    username TEXT NOT NULL,
+    password TEXT NOT NULL
+)
+
+CREATE TABLE IF NOT EXIST 'pedidos'(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    description TEXT NOT NULL,
+    date TEXT NOT NULL,
+    id_usuario INTEGER NOT NULL,
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id)
+)
