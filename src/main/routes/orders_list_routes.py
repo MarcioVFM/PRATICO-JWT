@@ -6,9 +6,11 @@ from src.main.composer.list_orders_composer import list_orders_composer
 from src.main.composer.login_creator_composer import login_creator_composer
 from src.main.composer.user_registry_composer import user_registry_composer
 
-bank_routes_bp = Blueprint('orders_routes', __name__)
+from src.main.middlerwares.auth_jwt import auth_jwt_verify
 
-@bank_routes_bp.route('/user/registry', methods=['POST'])
+orders_routes_bp = Blueprint('orders_routes', __name__)
+
+@orders_routes_bp.route('/user/registry', methods=['POST'])
 def registy_user():
     try:
         http_request = HttpResquest(body=request.json)
@@ -18,12 +20,31 @@ def registy_user():
     except Exception as exception:
         return jsonify(exception), 500
     
-@bank_routes_bp.route('/user/login', methods=['GET'])
+@orders_routes_bp.route('/user/login', methods=['POST'])
 def create_login():
     try:
         http_request = HttpResquest(body=request.json)
         http_response = login_creator_composer().handle(http_request)
-        return jsonify
+        return jsonify(http_response.body), http_response.status_code
     
     except Exception as exception:
-        pass
+        return jsonify(exception), 500
+
+@orders_routes_bp.route('/orders/create/<user_id>', methods=['POST'])
+def create_order(user_id):
+    try:
+        token_information = auth_jwt_verify(user_id)
+        http_request = HttpResquest(
+            body=request.json,
+            params={'user_id': user_id},
+            token_infos=token_information
+        )
+        http_response = create_orders_composer().handle(http_request)
+        return jsonify(http_response.body), http_response.status_code
+
+    except Exception as exception:
+        return jsonify(exception), 500
+    
+@orders_routes_bp.route('/orders/list/<user_id>', methods=['GET'])
+def list_order(user_id):
+    pass

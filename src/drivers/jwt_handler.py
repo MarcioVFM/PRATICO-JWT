@@ -1,7 +1,7 @@
 import jwt
 from datetime import datetime, timedelta, timezone
 
-class JwtHnadler:
+class JwtHandler:
     def create_token_jwt(self, body: dict) -> str:
         token = jwt.encode(
             payload={

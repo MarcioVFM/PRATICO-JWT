@@ -7,6 +7,6 @@ def create_orders_composer():
     conn = dbconnectionhandler.get_connection()
     model = OrdersRepository(conn)
     controller = CreateOrder(model)
-    view = controller(controller)
+    view = CreateOrdersView(controller)
 
     return view

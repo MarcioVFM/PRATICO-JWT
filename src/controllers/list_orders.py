@@ -1,5 +1,4 @@
 from src.models.interfaces.order_repository import OrdersRepositoryInterface
-from src.drivers.jwt_handler import JwtHnadler
 from .interfaces.list_orders import ListOrdersIterface
 
 class ListOrders(ListOrdersIterface):
