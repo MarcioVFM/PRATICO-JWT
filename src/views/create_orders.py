@@ -1,6 +1,7 @@
+from src.controllers.create_order import CreateOrder
+from src.errors.types.http_bad_request import HttpBadRequestError
 from .http_types.http_request import HttpResquest
 from .http_types.http_response import HttpResponse
-from src.controllers.create_order import CreateOrder
 
 class CreateOrdersView:
     def __init__(self, controller: CreateOrder) -> None:
@@ -19,4 +20,4 @@ class CreateOrdersView:
             not description
             or not user_id
             or not isinstance(description, str)
-        ): raise Exception('Invalid Input')
+        ): raise HttpBadRequestError('Invalid Input')
