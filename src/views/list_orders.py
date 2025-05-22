@@ -7,7 +7,7 @@ class ListOrdersView:
         self.__controller = controller
 
     def handle(self, http_request: HttpResquest) -> HttpResponse:
-        user_id = http_request.params(user_id)
+        user_id = http_request.params.get('user_id')
         self.__validate_inputs(user_id)
 
         response = self.__controller.list(user_id)

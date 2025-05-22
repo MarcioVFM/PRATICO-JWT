@@ -1,5 +1,6 @@
 from src.models.interfaces.order_repository import OrdersRepositoryInterface
 from .interfaces.list_orders import ListOrdersIterface
+from datetime import datetime
 
 class ListOrders(ListOrdersIterface):
     def __init__(self, order_reposoitory: OrdersRepositoryInterface) -> None:
@@ -15,11 +16,16 @@ class ListOrders(ListOrdersIterface):
         for order in orders:
             order_name = order[1]
             order_date = order[2]
+            date_formatted = self.__format_datetime(order_date)
 
             dict_orders.append({
                 'order': order_name,
-                'date': order_date
+                'date': date_formatted
             })
 
         return dict_orders
-            
+    
+    def __format_datetime(self, order_date: str) -> str:
+            order_datetime = datetime.fromisoformat(order_date)
+            date_formatted = order_datetime.strftime("%d/%m/%Y %H:%M:%S")
+            return date_formatted

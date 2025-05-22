@@ -8,6 +8,7 @@ def test_list_orders():
     conn = dbconnectionhandler.get_connection()
     repository = OrdersRepository(conn)
     controller = ListOrders(repository)
-    user_id = 1
+    user_id = 5
     orders = controller.list(user_id)
+    print()
     print(orders)

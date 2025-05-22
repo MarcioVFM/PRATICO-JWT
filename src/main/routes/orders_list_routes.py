@@ -7,6 +7,7 @@ from src.main.composer.login_creator_composer import login_creator_composer
 from src.main.composer.user_registry_composer import user_registry_composer
 
 from src.main.middlerwares.auth_jwt import auth_jwt_verify
+from src.errors.errors_handler import handle_error
 
 orders_routes_bp = Blueprint('orders_routes', __name__)
 
@@ -18,7 +19,8 @@ def registy_user():
         return jsonify(http_response.body), http_response.status_code
     
     except Exception as exception:
-        return jsonify(exception), 500
+        http_response = handle_error(exception)
+        return jsonify(http_response.body), http_response.status_code
     
 @orders_routes_bp.route('/user/login', methods=['POST'])
 def create_login():
@@ -28,7 +30,8 @@ def create_login():
         return jsonify(http_response.body), http_response.status_code
     
     except Exception as exception:
-        return jsonify(exception), 500
+        http_response = handle_error(exception)
+        return jsonify(http_response.body), http_response.status_code
 
 @orders_routes_bp.route('/orders/create/<user_id>', methods=['POST'])
 def create_order(user_id):
@@ -43,8 +46,20 @@ def create_order(user_id):
         return jsonify(http_response.body), http_response.status_code
 
     except Exception as exception:
-        return jsonify(exception), 500
+        http_response = handle_error(exception)
+        return jsonify(http_response.body), http_response.status_code
     
 @orders_routes_bp.route('/orders/list/<user_id>', methods=['GET'])
 def list_order(user_id):
-    pass
+    try:
+        token_information = auth_jwt_verify(user_id)
+        http_request = HttpResquest(
+            params={'user_id': user_id},
+            token_infos= token_information
+        )
+        http_response = list_orders_composer().handle(http_request)
+        return jsonify(http_response.body), http_response.status_code
+
+    except Exception as exception:
+        http_response = handle_error(exception)
+        return jsonify(http_response.body), http_response.status_code
